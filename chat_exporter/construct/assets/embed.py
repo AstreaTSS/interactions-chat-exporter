@@ -1,6 +1,6 @@
 import html
 
-from chat_exporter.ext.discord_import import discord
+import interactions as ipy
 
 from chat_exporter.ext.html_generator import (
     fill_out,
@@ -24,12 +24,6 @@ from chat_exporter.ext.html_generator import (
 modules_which_use_none = ["nextcord", "disnake"]
 
 
-def _gather_checker():
-    if discord.module not in modules_which_use_none and hasattr(discord.Embed, "Empty"):
-        return discord.Embed.Empty
-    return None
-
-
 class Embed:
     r: str
     g: str
@@ -45,11 +39,10 @@ class Embed:
     check_against = None
 
     def __init__(self, embed, guild):
-        self.embed: discord.Embed = embed
-        self.guild: discord.Guild = guild
+        self.embed: ipy.Embed = embed
+        self.guild: ipy.Guild = guild
 
     async def flow(self):
-        self.check_against = _gather_checker()
         self.build_colour()
         await self.build_title()
         await self.build_description()
@@ -64,12 +57,12 @@ class Embed:
 
     def build_colour(self):
         self.r, self.g, self.b = (
-            (self.embed.colour.r, self.embed.colour.g, self.embed.colour.b)
-            if self.embed.colour != self.check_against else (0x20, 0x22, 0x25)  # default colour
+            (self.embed.color.r, self.embed.color.g, self.embed.color.b)
+            if self.embed.color is not None else (0x20, 0x22, 0x25)  # default colour
         )
 
     async def build_title(self):
-        self.title = html.escape(self.embed.title) if self.embed.title != self.check_against else ""
+        self.title = html.escape(self.embed.title) if self.embed.title else ""
 
         if self.title:
             self.title = await fill_out(self.guild, embed_title, [
@@ -77,7 +70,7 @@ class Embed:
             ])
 
     async def build_description(self):
-        self.description = html.escape(self.embed.description) if self.embed.description != self.check_against else ""
+        self.description = html.escape(self.embed.description) if self.embed.description else ""
 
         if self.description:
             self.description = await fill_out(self.guild, embed_description, [
@@ -107,18 +100,18 @@ class Embed:
 
     async def build_author(self):
         self.author = html.escape(self.embed.author.name) if (
-                self.embed.author and self.embed.author.name != self.check_against
+                self.embed.author and self.embed.author.name
         ) else ""
 
         self.author = f'<a class="chatlog__embed-author-name-link" href="{self.embed.author.url}">{self.author}</a>' \
             if (
-                self.embed.author and self.embed.author.url != self.check_against
+                self.embed.author and self.embed.author.url
             ) else self.author
 
         author_icon = await fill_out(self.guild, embed_author_icon, [
             ("AUTHOR", self.author, PARSE_MODE_NONE),
             ("AUTHOR_ICON", self.embed.author.icon_url, PARSE_MODE_NONE)
-        ]) if self.embed.author and self.embed.author.icon_url != self.check_against else ""
+        ]) if self.embed.author and self.embed.author.icon_url else ""
 
         if author_icon == "" and self.author != "":
             self.author = await fill_out(self.guild, embed_author, [("AUTHOR", self.author, PARSE_MODE_NONE)])
@@ -128,20 +121,20 @@ class Embed:
     async def build_image(self):
         self.image = await fill_out(self.guild, embed_image, [
             ("EMBED_IMAGE", str(self.embed.image.proxy_url), PARSE_MODE_NONE)
-        ]) if self.embed.image and self.embed.image.url != self.check_against else ""
+        ]) if self.embed.image and self.embed.image.url else ""
 
     async def build_thumbnail(self):
         self.thumbnail = await fill_out(self.guild, embed_thumbnail, [
             ("EMBED_THUMBNAIL", str(self.embed.thumbnail.url), PARSE_MODE_NONE)]) \
-            if self.embed.thumbnail and self.embed.thumbnail.url != self.check_against else ""
+            if self.embed.thumbnail and self.embed.thumbnail.url else ""
 
     async def build_footer(self):
         self.footer = html.escape(self.embed.footer.text) if (
-                self.embed.footer and self.embed.footer.text != self.check_against
+                self.embed.footer and self.embed.footer.text
         ) else ""
 
         footer_icon = self.embed.footer.icon_url if (
-                self.embed.footer and self.embed.footer.icon_url != self.check_against
+                self.embed.footer and self.embed.footer.icon_url
         ) else None
 
         if not self.footer:

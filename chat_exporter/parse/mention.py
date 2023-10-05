@@ -4,9 +4,9 @@ from typing import Optional
 import pytz
 import datetime
 
-from chat_exporter.ext.discord_import import discord
+import interactions as ipy
 
-bot: Optional[discord.Client] = None
+bot: Optional[ipy.Client] = None
 
 
 def pass_bot(_bot):
@@ -40,7 +40,7 @@ class ParseMention:
     ESCAPE_GT = "______gt______"
     ESCAPE_AMP = "______amp______"
 
-    def __init__(self, content, guild):
+    def __init__(self, content, guild: ipy.Guild):
         self.content = content
         self.guild = guild
 

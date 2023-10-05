@@ -3,12 +3,12 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "chat_exporter"
-description = "A simple Discord chat exporter for Python Discord bots."
-version = "2.6.1"
+name = "interactions-chat-exporter"
+description = "A simple Discord chat exporter for interactions.py. A fork of DiscordChatExporterPy by mahtoid."
+version = "0.0.1"
 readme = "README.md"
 authors = [
-    { name="mahtoid", email="info@mahto.id" }
+    { name="AstreaTSS", email="discord@astrea.cc" }
 ]
 requires-python = ">=3.6"
 license = { text = "GPL-3.0-only" }
@@ -30,9 +30,7 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = ["aiohttp", "pytz", "grapheme", "emoji"]
-keywords = ["chat exporter", "discord chat exporter", "discord", "discordpy", "disnake", "pycord", "nextcord"]
+keywords = ["chat exporter", "discord chat exporter", "interactions.py", "interactions"]
 
 [project.urls]
-Homepage = "https://github.com/mahtoid/DiscordChatExporterPy"
-Discord = "https://discord.mahto.id/"
-Donate = "https://ko-fi.com/mahtoid"
+Homepage = "https://github.com/AstreaTSS/interactions-chat-exporter"

@@ -1,4 +1,4 @@
-from chat_exporter.ext.discord_import import discord
+import interactions as ipy
 
 from chat_exporter.ext.discord_utils import DiscordUtils
 from chat_exporter.ext.html_generator import (
@@ -37,13 +37,13 @@ class Component:
         self.guild = guild
 
     async def build_component(self, c):
-        if isinstance(c, discord.Button):
+        if isinstance(c, ipy.Button):
             await self.build_button(c)
-        elif isinstance(c, discord.SelectMenu):
+        elif isinstance(c, ipy.StringSelectMenu):
             await self.build_menu(c)
             Component.menu_div_id += 1
 
-    async def build_button(self, c):
+    async def build_button(self, c: ipy.Button):
         url = c.url if c.url else ""
         label = c.label if c.label else ""
         style = self.styles[str(c.style).split(".")[1]]
@@ -59,7 +59,7 @@ class Component:
             ("STYLE", style, PARSE_MODE_NONE)
         ])
 
-    async def build_menu(self, c):
+    async def build_menu(self, c: ipy.StringSelectMenu):
         placeholder = c.placeholder if c.placeholder else ""
         options = c.options
         content = ""

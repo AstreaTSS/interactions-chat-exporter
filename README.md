@@ -1,3 +1,7 @@
+# Fork Notice
+
+This is a fork of [mahtoid/DiscordChatExporterPy](https://github.com/mahtoid/DiscordChatExporterPy) to try to get it working with interactions.py. It's very likely unstable and not ready to be used yet.
+
 <div align="center">
 
 [![Version][pypi-version]][pypi-url]

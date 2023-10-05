@@ -7,7 +7,7 @@ from typing import List, Optional
 
 import pytz
 
-from chat_exporter.ext.discord_import import discord
+import interactions as ipy
 
 from chat_exporter.construct.message import gather_messages
 from chat_exporter.construct.assets.component import Component
@@ -25,16 +25,16 @@ class TranscriptDAO:
 
     def __init__(
         self,
-        channel: discord.TextChannel,
+        channel: ipy.GuildText,
         limit: Optional[int],
-        messages: Optional[List[discord.Message]],
+        messages: Optional[List[ipy.Message]],
         pytz_timezone,
         military_time: bool,
         fancy_times: bool,
         before: Optional[datetime.datetime],
         after: Optional[datetime.datetime],
         support_dev: bool,
-        bot: Optional[discord.Client],
+        bot: Optional[ipy.Client],
     ):
         self.channel = channel
         self.messages = messages
@@ -47,7 +47,7 @@ class TranscriptDAO:
         self.pytz_timezone = pytz_timezone
 
         # This is to pass timezone in to mention.py without rewriting
-        setattr(discord.Guild, "timezone", self.pytz_timezone)
+        setattr(ipy.Guild, "timezone", self.pytz_timezone)
 
         if bot:
             pass_bot(bot)
@@ -104,7 +104,7 @@ class TranscriptDAO:
         channel_creation_time = self.channel.created_at.astimezone(timezone).strftime("%b %d, %Y (%T)")
 
         raw_channel_topic = (
-            self.channel.topic if isinstance(self.channel, discord.TextChannel) and self.channel.topic else ""
+            self.channel.topic if isinstance(self.channel, ipy.GuildText) and self.channel.topic else ""
         )
 
         channel_topic_html = ""
@@ -125,7 +125,7 @@ class TranscriptDAO:
 
         sd = (
             '<div class="meta__support">'
-            '    <a href="https://ko-fi.com/mahtoid">DONATE</a>'
+            '    <a href="https://ko-fi.com/mahtoid">DONATE TO ORIGINAL DEV</a>'
             '</div>'
         ) if self.support_dev else ""
 
